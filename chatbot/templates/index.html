@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot Neotravel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>🤖 Demande de devis - Neotravel</h2>
+
+        {% if responses %}
+            <div class="chat-history">
+                {% for q in questions %}
+                    {% if q.key in responses %}
+                        <div class="chat-entry">
+                            <p class="question">🗨️ {{ q.question }}</p>
+                            <p class="answer">👉 {{ responses[q.key] }}</p>
+                            <form method="post" action="/edit/{{ q.key }}">
+                                <button type="submit" class="edit-button">Modifier</button>
+                            </form>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <hr>
+            </div>
+        {% endif %}
+
+        {% if question %}
+            <div class="chat-box">
+                <p class="bot">{{ question }}</p>
+                <form method="POST">
+                    <input type="text" name="message" placeholder="Votre réponse ici..." autofocus required>
+                    <button type="submit">Envoyer</button>
+                </form>
+            </div>
+        {% elif summary %}
+            <div class="recap-box">
+                <h3>✅ Merci pour votre demande !</h3>
+                <pre>{{ summary }}</pre>
+                <p>🕐 Notre équipe vous recontactera sous 24h avec un devis détaillé.</p>
+                <script>
+                    setTimeout(function() {
+                        window.location.href = "/";
+                    }, 6000);
+                </script>
+            </div>
+        {% endif %}
+        
+    </div>
+</body>
+</html>
