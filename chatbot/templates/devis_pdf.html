@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Pré-devis Neotravel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10pt;
+            padding: 20px;
+            color: #333;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .header img {
+            height: 35px;
+        }
+        .header-text {
+            text-align: right;
+            font-size: 8.5pt;
+            color: #444;
+        }
+        .header-text p {
+            margin: 2px 0;
+        }
+        .title {
+            text-align: center;
+            font-size: 13pt;
+            margin-bottom: 10px;
+        }
+        .client-info {
+            margin-bottom: 10px;
+        }
+        .devis-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+        .devis-table th {
+            background-color: #f9fafb;
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+            font-size: 9pt;
+        }
+        .devis-table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            vertical-align: top;
+            background-color: #fff;
+            font-size: 9pt;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 9pt;
+            color: #888;
+        }
+        .response-box {
+            border: 1px dashed #ccc;
+            padding: 8px;
+            margin-top: 10px;
+            font-style: italic;
+            font-size: 9pt;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="static/images/logo.svg" alt="Neotravel">
+        <div class="header-text">
+            <p><strong>Réf. devis :</strong> DEV-2025-001</p>
+            <p><strong>Date :</strong> {{ today }}</p>
+
+        </div>
+    </div>
+
+    <h2 class="title">📄 Pré-devis personnalisé – Neotravel</h2>
+
+    <div class="client-info">
+        <p><strong>Email :</strong> {{ session['responses'].get('email', 'Non renseigné') }}</p>
+        <p><strong>Besoins spécifiques :</strong> {{ session['responses'].get('special_needs', 'Aucun') }}</p>
+    </div>
+
+    <table class="devis-table">
+        <thead>
+            <tr>
+                <th>Classe</th>
+                <th>Description</th>
+                <th>Détails</th>
+                <th>Tarification</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in devis %}
+            <tr>
+                <td><strong>{{ d.classe }}</strong></td>
+                <td><em>{{ d.description }}</em></td>
+                <td>
+                    <strong>Distance :</strong> {{ d.distance }} km<br>
+                    <strong>Durée :</strong> {{ d.duree }} h (pauses incluses)<br>
+                    <strong>Chauffeurs :</strong> {{ d.nb_chauffeurs }}<br>
+                </td>
+                <td>
+                    {% for v in d.vehicules %}
+                        {{ v.nombre }} x {{ v.type }} → {{ v.cout }} €<br>
+                    {% endfor %}
+                    <strong>Frais chauffeur :</strong> {{ d.frais_chauffeur }} €<br>
+                    {% if d.forfait_minimum > 0 %}
+                        <strong>Forfait min. :</strong> {{ d.forfait_minimum }} €<br>
+                    {% endif %}
+                    <strong>Total HT :</strong> {{ d.total_ht }} €
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="response-box">
+        Merci de confirmer votre accord par retour de mail à <strong>contact@neotravel.fr</strong><br>
+        en précisant la référence de devis ci-dessus.
+    </div>
+
+    <div class="footer">
+        © 2025 Neotravel – Solution de réservation de transport de groupes
+    </div>
+</body>
+</html>

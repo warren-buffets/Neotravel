@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Pré-devis – Neotravel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fdfdfd;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 720px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+        .devis-bloc {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+        }
+        .devis-bloc img {
+            max-width: 80px;
+            margin-bottom: 10px;
+        }
+        .description {
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            margin: 6px 4px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .button:hover {
+            background-color: #357ac9;
+        }
+
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>📄 Pré-devis généré</h2>
+
+    {% for d in devis %}
+        <div class="devis-bloc">
+            {% if d.classe == "Classe A" %}
+                <img src="{{ url_for('static', filename='images/classe_a.png') }}" alt="Classe A">
+            {% elif d.classe == "Classe B" %}
+                <img src="{{ url_for('static', filename='images/classe_b.png') }}" alt="Classe B">
+            {% elif d.classe == "Classe C" %}
+                <img src="{{ url_for('static', filename='images/classe_c.png') }}" alt="Classe C">
+            {% endif %}
+
+            <h3>{{ d.classe }}</h3>
+            <p class="description">{{ d.description }}</p>
+            <p><strong>Distance estimée :</strong> {{ d.distance }} km</p>
+            <p><strong>Trajet estimé :</strong> {{ d.duree }} h avec pauses incluses.</p>
+            <p><strong>Nombre de chauffeurs requis :</strong> {{ d.nb_chauffeurs }}</p>
+
+            {% if d.vehicules %}
+                <ul>
+                {% for v in d.vehicules %}
+                    <li>{{ v.nombre }} x {{ v.type }} à {{ v.prix_km }} €/km = {{ v.cout }} €</li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>Aucun véhicule proposé.</p>
+            {% endif %}
+
+            <p><strong>Frais chauffeur :</strong> {{ d.frais_chauffeur }} €</p>
+            {% if d.forfait_minimum > 0 %}
+                <p><strong>Forfait minimum appliqué :</strong> {{ d.forfait_minimum }} €</p>
+            {% endif %}
+            <strong>Total HT : {{ d.total_ht }} €</strong>
+        </div>
+    {% endfor %}
+
+    <div class="button-container">
+        <a href="/" class="button">🏠 Revenir à l’accueil</a>
+        <a href="/devis/pdf" class="button">📄 Télécharger le PDF</a>
+    </div>
+</div>
+</body>
+</html>

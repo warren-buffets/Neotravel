@@ -2,9 +2,78 @@
 <html>
 <head>
     <title>Chatbot Neotravel</title>
+    <meta charset="utf-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            background-color: #fdfdfd;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .logo-header {
+            background-color: white;
+            padding: 20px 20px 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+        .logo-header img {
+            height: 50px;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            margin: 6px 4px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .button:hover {
+            background-color: #357ac9;
+        }
+
+        .button-container {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .edit-button {
+            background: transparent;
+            border: none;
+            color: #0077cc;
+            text-decoration: underline;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+
+        .edit-button:hover {
+            color: #004b99;
+        }
+    </style>
 </head>
 <body>
+
+    <div class="logo-header">
+        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Neotravel">
+    </div>
+
     <div class="container">
         <h2>🤖 Demande de devis - Neotravel</h2>
 
@@ -30,22 +99,27 @@
                 <p class="bot">{{ question }}</p>
                 <form method="POST">
                     <input type="text" name="message" placeholder="Votre réponse ici..." autofocus required>
-                    <button type="submit">Envoyer</button>
+                    <button type="submit" class="button">Envoyer</button>
                 </form>
             </div>
-        {% elif summary %}
+        {% endif %}
+
+        {% if not question and summary %}
             <div class="recap-box">
                 <h3>✅ Merci pour votre demande !</h3>
                 <pre>{{ summary }}</pre>
                 <p>🕐 Notre équipe vous recontactera sous 24h avec un devis détaillé.</p>
-                <script>
-                    setTimeout(function() {
-                        window.location.href = "/";
-                    }, 6000);
-                </script>
+
+                <div class="button-container">
+                    <a href="/devis" class="button">📊 Voir le pré-devis</a>
+                    <a href="/devis/pdf" class="button">📄 Télécharger le PDF</a>
+                    <form method="POST" action="/reset" style="display:inline;">
+                        <button type="submit" class="button">🔄 Recommencer</button>
+                    </form>
+                    <a href="/" class="button">🏠 Accueil</a>
+                </div>
             </div>
         {% endif %}
-        
     </div>
 </body>
 </html>
